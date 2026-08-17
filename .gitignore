@@ -1,0 +1,42 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# --- Tooling caches ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# --- OS ---
+.DS_Store
+
+# --- Study inputs and binary deliverables (kept on disk, not version-controlled) ---
+#
+# Downloaded inputs: Cboe volatility-index history (Cboe's terms of use) and Yahoo Finance
+# price history. Both are fetched rather than committed. Populate with:
+#     python scripts/fetch_cboe_data.py && python scripts/fetch_price_data.py
+data/raw/
+
+# The original Word report and Excel workbook are large binaries that diff poorly.
+deliverables/
+
+# Scratch reproduction directories.
+my_reproduction/
+quick_check/
+.verify/
+
+# --- Local handover helpers (not part of the published project) ---
+finish-git-setup.sh
+TODO-before-publishing.md
+
+# --- Local handover note (not part of the published project) ---
+TODO-before-publishing.md

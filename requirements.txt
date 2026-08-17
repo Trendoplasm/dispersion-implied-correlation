@@ -1,0 +1,10 @@
+# Exact runtime pins used to produce the committed results in outputs/.
+#
+# These are for a plain-pip workflow. `pyproject.toml` carries looser lower bounds, and
+# `uv sync` resolves from there. Development tools live in the project's `dev` extra:
+#     pip install -e ".[dev]"
+numpy==2.5.2
+pandas==3.0.5
+scipy==1.18.0
+statsmodels==0.14.6
+matplotlib==3.11.1
