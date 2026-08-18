@@ -1,0 +1,47 @@
+ticker,name,sector,iv_index,in_iv_basket
+AAPL,Apple,Information technology,VXAPL,True
+AMZN,Amazon,Consumer discretionary,VXAZN,True
+GOOGL,Alphabet Class A,Communication services,VXGOG,True
+GS,Goldman Sachs,Financials,VXGS,True
+IBM,International Business Machines,Information technology,VXIBM,True
+MSFT,Microsoft,Information technology,,False
+META,Meta Platforms,Communication services,,False
+NVDA,NVIDIA,Information technology,,False
+JPM,JPMorgan Chase,Financials,,False
+V,Visa,Financials,,False
+JNJ,Johnson & Johnson,Health care,,False
+WMT,Walmart,Consumer staples,,False
+PG,Procter & Gamble,Consumer staples,,False
+XOM,Exxon Mobil,Energy,,False
+UNH,UnitedHealth Group,Health care,,False
+HD,Home Depot,Consumer discretionary,,False
+MA,Mastercard,Financials,,False
+CVX,Chevron,Energy,,False
+ABBV,AbbVie,Health care,,False
+KO,Coca-Cola,Consumer staples,,False
+PEP,PepsiCo,Consumer staples,,False
+MRK,Merck,Health care,,False
+BAC,Bank of America,Financials,,False
+PFE,Pfizer,Health care,,False
+TMO,Thermo Fisher Scientific,Health care,,False
+COST,Costco,Consumer staples,,False
+AVGO,Broadcom,Information technology,,False
+CSCO,Cisco Systems,Information technology,,False
+ADBE,Adobe,Information technology,,False
+ACN,Accenture,Information technology,,False
+MCD,McDonald's,Consumer discretionary,,False
+DIS,Walt Disney,Communication services,,False
+WFC,Wells Fargo,Financials,,False
+LIN,Linde,Materials,,False
+VZ,Verizon,Communication services,,False
+TXN,Texas Instruments,Information technology,,False
+NKE,Nike,Consumer discretionary,,False
+PM,Philip Morris International,Consumer staples,,False
+CRM,Salesforce,Information technology,,False
+AMD,Advanced Micro Devices,Information technology,,False
+NEE,NextEra Energy,Utilities,,False
+RTX,RTX,Industrials,,False
+HON,Honeywell,Industrials,,False
+UPS,United Parcel Service,Industrials,,False
+INTC,Intel,Information technology,,False
+CAT,Caterpillar,Industrials,,False
