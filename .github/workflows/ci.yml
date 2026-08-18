@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install the project
+        run: uv sync --extra dev
+
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      # Run once, on the development interpreter: numpy's type stubs require 3.12+ syntax to
+      # analyse. Runtime support for 3.11 is verified by the test matrix below.
+      - name: Type-check
+        run: uv run mypy
+
+  test:
+    name: Test on Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install the project
+        run: uv sync --extra dev --python ${{ matrix.python-version }}
+
+      # Neither input is redistributed here, so the end-to-end reproduction test skips itself.
+      # Everything else runs on synthetic fixtures with analytically known answers.
+      - name: Test
+        run: uv run pytest -m "not golden"
+
+  reproduce:
+    name: Reproduce the pilot end to end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install the project
+        run: uv sync --extra dev
+
+      # 47 price histories plus 10 Cboe index files. The price fetch is the slow part.
+      - name: Fetch the Cboe index and price histories
+        run: |
+          uv run python scripts/fetch_cboe_data.py
+          uv run python scripts/fetch_price_data.py
+
+      # The study period is frozen, so a download taken today must still reproduce the committed
+      # tables exactly. This job is what proves that claim rather than asserting it.
+      - name: Reproduce and compare against the committed results
+        run: uv run pytest -m golden
+
+      - name: Upload the reproduced figures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plots
+          path: outputs/plots
+          if-no-files-found: ignore
