@@ -4,7 +4,9 @@
 # See README.md for a plain-pip alternative.
 
 PYTHON_VERSION := 3.13
-RUN := uv run --python $(PYTHON_VERSION)
+# --extra dev so `make test` works on a fresh clone without `make setup` having been run
+# first; uv resolves and installs what is missing rather than failing on an absent pytest.
+RUN := uv run --extra dev --python $(PYTHON_VERSION)
 
 .DEFAULT_GOAL := help
 .PHONY: help setup data lint format typecheck test test-fast reproduce verify clean
@@ -46,6 +48,7 @@ verify:  ## Reproduce into a scratch directory and compare against outputs/
 	$(RUN) python -c "from pathlib import Path; from dispersion.verify import compare_output_dirs; \
 r = compare_output_dirs(Path('outputs'), Path('.verify')); \
 print(f'largest relative difference: {r.max_relative_difference:.2e} ({r.max_difference_field})'); \
+print('note: columns whose correct value is zero (fit residuals) are compared on an absolute floor, so a large relative figure above is expected and not a failure'); \
 print('MATCH' if r.matches else chr(10).join(r.discrepancies[:10])); \
 raise SystemExit(0 if r.matches else 1)"
 

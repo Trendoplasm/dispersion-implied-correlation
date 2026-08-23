@@ -4,9 +4,7 @@ Index options price a view on how much the constituents of an index move *togeth
 measures that view against what the constituents actually did, then backtests the dispersion trade
 that harvests the difference.
 
-<!-- Once this repository is on GitHub, replace OWNER/REPO below to activate the CI badge:
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
--->
+[![CI](https://github.com/Trendoplasm/dispersion-implied-correlation/actions/workflows/ci.yml/badge.svg)](https://github.com/Trendoplasm/dispersion-implied-correlation/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230)](https://docs.astral.sh/ruff/)
@@ -276,9 +274,26 @@ make verify  # re-run and print the largest difference found
 trading day, so an open-ended sample would answer differently on every download. Freezing the end
 is what lets a download taken months later reproduce the published numbers.
 
-Reproduction is checked against a relative tolerance of `1e-9` — far above the last-digit drift that
-the host's linear-algebra library introduces, and far below anything that could change a reported
-statistic.
+Bit-for-bit equality is not the target, and cannot be. IEEE 754 requires `+ - * / sqrt` to be
+correctly rounded, so those agree everywhere, but it deliberately imposes no such requirement on
+`exp`, `log` or `erf` — each platform's maths library may use its own approximation. The
+linear-algebra routines add to this, since floating-point addition is not associative and a
+different summation order gives a different last digit. Identical code on macOS and on Linux
+therefore disagrees at around `1e-12` relative.
+
+Two values are treated as agreeing when
+
+```text
+|a - b| <= atol + rtol * max(|a|, |b|)
+```
+
+with `rtol = 1e-9` and `atol = 1e-10`. The absolute term is not decoration. Several exported
+columns are the *residual of an identity* whose correct value is zero — `attribution_error` and
+`check` report how far the leg-by-leg decomposition missed the realised profit, and a correct run
+puts them at `1e-12`. Comparing `1e-12` against `0.0` relatively gives a difference of 100%, so a
+relative-only check fails a study that in fact reproduced perfectly. The floor sits seven orders
+of magnitude below the smallest quantity this study reports, so it cannot mask a real difference.
+Both behaviours are covered by tests in `tests/test_verify.py`.
 
 Tests build their own return series rather than reading market data. The construction is worth a
 mention: rows of a Hadamard matrix are mutually orthogonal, so combining a shared factor with

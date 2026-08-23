@@ -34,9 +34,6 @@ my_reproduction/
 quick_check/
 .verify/
 
-# --- Local handover helpers (not part of the published project) ---
-finish-git-setup.sh
-TODO-before-publishing.md
-
-# --- Local handover note (not part of the published project) ---
-TODO-before-publishing.md
+# --- Local working notes ---
+TODO-*.md
+*.local.md
